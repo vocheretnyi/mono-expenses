@@ -1,5 +1,5 @@
 
-LOAD DATA LOCAL INFILE 'statements.json'
+LOAD DATA LOCAL INFILE '{file_name}'
 INTO TABLE Transactions
 FORMAT JSON
 (

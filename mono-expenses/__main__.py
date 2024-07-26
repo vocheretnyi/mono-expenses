@@ -1,9 +1,12 @@
+import argparse
 import os
 import requests
 import json
 import time
 from dotenv import load_dotenv
 from http import HTTPStatus
+import singlestoredb as s2
+from pathlib import Path
 
 load_dotenv()
 
@@ -87,7 +90,7 @@ def GetAllStatements(account=0, max_iterations=None):
     return resultJson
 
 
-def main():
+def GetAndStoreStatements():
     # 1. Get client info
     clientInfoJson = GetClientInfo()
     print("Client info:\n", clientInfoJson)
@@ -96,8 +99,57 @@ def main():
     accountId = 0
     print("Account ID(default = 0):\n", accountId)
 
+    # TODO: 2 is just for test, remove it if you need to get all statements
     statementsJson = GetAllStatements(accountId, max_iterations=2)
     print("#StatementsJson: ", len(statementsJson))
+
+
+def IngestStatementsToDB():
+    db_host = os.environ.get("DB_HOST")
+    db_port = os.environ.get("DB_PORT")
+    db_username = os.environ.get("DB_USER")
+    db_password = os.environ.get("DB_PASSWORD")
+    db_name = os.environ.get("DB_NAME")
+    s2.options.local_infile = True
+    s2.describe_option('local_infile')
+    conn = s2.connect(host=db_host, user=db_username, password=db_password, port=db_port, database=db_name)
+    cur = conn.cursor()
+    # Check the connection
+    cur.execute("SELECT @@singlestoredb_version")
+    print("Singlestore version: ", cur.fetchone())
+
+    ROOT_DIR = Path(__file__).parent
+    table_schema_file = ROOT_DIR / 'schema.sql'
+    table_schema_query = table_schema_file.read_text()
+    cur.execute(table_schema_query)
+
+    statements_file = ROOT_DIR / 'statements.json'
+    statements_full_path = str(statements_file.absolute())
+
+    load_data_file = ROOT_DIR / 'load_data.sql'
+    load_data_query = load_data_file.read_text()
+    load_data_query = load_data_query.replace('{file_name}', statements_full_path)
+    cur.execute(load_data_query)
+
+    cur.execute("SELECT COUNT(*) FROM Transactions1")
+    print("Number of transactions inserted: ", cur.fetchone())
+
+    cur.close()
+    conn.close()
+
+
+def main():
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('--help', action='help', help='Show this help message and exit')
+    parser.add_argument('--get-statements', action='store_true', default=False, help='Get and store statements')
+    parser.add_argument('--ingest-to-db', action='store_true', default=False, help='Ingest statements to the database')
+    args = parser.parse_args()
+    if args.get_statements:
+        GetAndStoreStatements()
+        print("Statements are stored in statements.json")
+    if args.ingest_to_db:
+        IngestStatementsToDB()
+        print("Statements are ingested to the database")
 
 
 if "__main__" == __name__:
