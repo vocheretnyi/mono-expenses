@@ -1,0 +1,20 @@
+MCC:
+    https://github.com/jleclanche/python-iso18245
+    https://github.com/greggles/mcc-codes
+    https://github.com/Sominemo/MCC-Localize-Dataset/blob/master/mcc-loc.json
+    https://github.com/jleclanche/python-iso18245/blob/master/iso18245/data/iso18245_official_list.csv
+    https://classification.codes/classifications/industry/mcc/
+    quick-reference-booklet-merchant-edition.pdf
+
+Useful:
+    https://github.com/Sominemo/Mono-PWA
+    https://pypi.org/project/ratelimiter/
+    https://github.com/doomuch/Monobank-API-to-Notion
+    https://davidgomes.com/loading-strava-activities-into-a-sql-database-and-using-english-to-ask-questions/
+    https://github.com/davidgomes/strava-postgres/blob/main/schema.sql
+
+
+GPT:
+    https://github.com/singlestore-labs/pyrag/tree/main
+    https://scottpersinger.com/2023/12/07/build-an-openai-assistant-to-chat-with-your-postgres-database/
+    https://github.com/tatari-tv/gptsql/tree/main
