@@ -131,6 +131,7 @@ def IngestStatementsToDB():
     load_data_query = load_data_query.replace('{file_name}', statements_full_path)
     cur.execute(load_data_query)
 
+    # TODO: hardcoded table name
     cur.execute("SELECT COUNT(*) FROM Transactions1")
     print("Number of transactions inserted: ", cur.fetchone())
 
