@@ -1,12 +1,21 @@
 # mono-expenses
 Export expenses from [Monobank](https://api.monobank.ua/docs/index.html#tag/Kliyentski-personalni-dani/paths/~1personal~1statement~1{account}~1{from}~1{to}/get) and ingest them into [SingleStoreDB](https://www.singlestore.com/)
 
-Make sure to set environment variables in `.env` file before run. See below.
+**Make sure** to set environment variables in `.env` file before run. See below.
 
 ## Run:
-Open a shell and run: `poetry shell`
+Open a shell and run: `poetry shell`.
+
+To retrieve your transactions from Monobank:
 ```bash
 python -m mono_expenses --get-statements
+```
+Note that Mono API has a limit of giving at most 500 transactions at a time, but also only 1 request per 60 seconds.
+Plus they also have a limit of range to be 31 days.
+In my case I was waiting for an almost an hour to get all my transactions.
+
+Then we may ingest our data into SingleStoreDB:
+```bash
 python -m mono_expenses --ingest-to-db
 ```
 
