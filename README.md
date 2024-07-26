@@ -21,3 +21,9 @@ e.g. add `export PATH="/Users/USERNAME/.local/bin:$PATH"` to your shell configur
 
 ### Environment variables
 Create `.env` file in the root of the project (see `env.example` for reference).
+
+## Run:
+```bash
+poetry shell
+python -m mono_expenses
+```
