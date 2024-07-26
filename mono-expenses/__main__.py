@@ -132,7 +132,7 @@ def IngestStatementsToDB():
     cur.execute(load_data_query)
 
     # TODO: hardcoded table name
-    cur.execute("SELECT COUNT(*) FROM Transactions1")
+    cur.execute("SELECT COUNT(*) FROM Transactions")
     print("Number of transactions inserted: ", cur.fetchone())
 
     cur.close()
